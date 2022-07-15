@@ -1,12 +1,30 @@
 body {
     background-color: #e9bc83;
 }
+/* Header------- */
 #header{
     text-align: center;
     padding: 20px;
     background-color: #253442;
     color: white;
 }
+#randomBtn{
+    width: fit-content;
+    margin: 10px auto 0 auto;
+}
+#secondaryDropDown{
+    display: none;
+}
+
+/* Side Panels----- */
+.sidePanel{
+    text-align: left;  
+    color: white;
+    background-color: #6e3845;
+}
+
+
+/* Center Panel */
 #showPanel{
     background-color: #cd7f4f;
     text-align: center;
@@ -14,9 +32,4 @@ body {
 }
 #comment{
     background-color: #e9bc83;
-}
-.sidePanel{
-    text-align: left;  
-    color: white;
-    background-color: #6e3845;
 }
