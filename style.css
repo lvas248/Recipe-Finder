@@ -1,0 +1,22 @@
+body {
+    background-color: #e9bc83;
+}
+#header{
+    text-align: center;
+    padding: 20px;
+    background-color: #253442;
+    color: white;
+}
+#showPanel{
+    background-color: #cd7f4f;
+    text-align: center;
+    padding: 50px;
+}
+#comment{
+    background-color: #e9bc83;
+}
+.sidePanel{
+    text-align: left;  
+    color: white;
+    background-color: #6e3845;
+}
