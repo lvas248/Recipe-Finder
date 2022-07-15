@@ -6,7 +6,29 @@
         <script src="./index.js"></script>
     </head>
     <body>
-        <div id="header" class="row"></div>
+        <div id="header" class="row">
+            <h1>Recipe-Finder</h1>
+            <form id="searchForm" action="submit">
+                <label for="">Search by: </label>
+                <select id="dropDown">
+                    <option value="search">Meal Search</option>
+                    <option value="area">Area</option>
+                    <option value="category">Category</option>
+                    <option value="first letter">First Letter</option>
+                    <option value="ingredient">Ingredient</option>
+                </select>
+                <select id="secondaryDropDown"></select>
+                <input id="searchInput" type="text" placeholder="">
+                <button type="submit">Search</button>
+            </form>
+            <button id="randomBtn">Random Meal</button>
+        </div>
+
+
+
+
+
+
         <div id="mainContainer" class="row">
             <div id="leftPanel" class="col-3 sidePanel"></div>
             <div id="centerPanel" class="col">
