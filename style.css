@@ -14,6 +14,8 @@ select{
     padding: 20px;
     background-color: #253442;
     color: white;
+    display: flex;
+    flex-direction: column;
 }
 #randomBtn{
     width: fit-content;
@@ -25,6 +27,12 @@ select{
 #searchInput{
     display: none;
 }
+#backButton{
+    width: fit-content;
+    float: left;
+    display: none;
+}
+
 
 /* Side Panels----- */
 .sidePanel{
@@ -54,10 +62,42 @@ select{
     text-align: center;
     padding: 50px;
     min-height: 750px;
+    align-items: center;
+    display: block;
+}
+#showPanel h5{
+    margin: 15px auto;
+    
 }
 #showPanel img{
     width: 60%;
+    margin: auto;
+}
+#showPanel ul{
+    text-align: left;
+    list-style: none;
+    margin: 15px auto;
+    display: inline-block;
+    width: fit-content;
+
+}
+#recipeDiv{
+    text-align: left;
 }
 #comment{
     background-color: #e9bc83;
+    text-align: center;
+    padding: 20px;
+    align-items: center;
 }
+#likeDiv{
+    display: flex;
+    width: fit-content;
+    margin: auto;
+}
+#likeBtn{
+    height: fit-content;
+    margin: 0 5px;
+}
+
+
