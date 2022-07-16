@@ -20,9 +20,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const secondDropDown = document.querySelector('#secondaryDropDown')
     const searchInput = document.querySelector('#searchInput')
     const searchForm = document.querySelector('#searchForm')
-    const resultsList = document.querySelector('#resultsList')
     const randomBtn = document.querySelector('#randomBtn')
     const showPanel = document.querySelector('#showPanel')
+    const resultsList = document.querySelector('#resultsList')
+
 
     function getSecondDropDownDetails(){
         getData(`https://www.themealdb.com/api/json/v1/1/list.php?${dropDown.value[0]}=list`)
@@ -72,9 +73,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
         }else if(dropDown.value === 'area' || dropDown.value === 'category'){
             secondDropDown.innerHTML = ""
+            getSecondDropDownDetails()
             searchInput.style.display = "none"
             secondDropDown.style.display = "inline-block"
-            getSecondDropDownDetails()
+            
         }else if(dropDown.value === "first letter"){
             secondDropDown.innerHTML =""
             const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
@@ -108,12 +110,23 @@ document.addEventListener('DOMContentLoaded', ()=>{
         .then(data => {
             //display data on showPanel
             console.log(data)
-            displayOnShowPanel(data.meals[0])
+            loadToShowPanel(data.meals[0])
         })
     })
+})
 
-        
-
+//Body
+    //Left Panel Functionality
+document.addEventListener('DOMContentLoaded',()=>{
+        //When a result is clicked - show panel is loaded with meal details
+    const resultsList = document.querySelector('#resultsList')
+    resultsList.addEventListener('click', (e)=>{
+        if(e.target.tagName === 'A'){
+            const mealId = e.target.parentNode.id
+            loadToShowPanelByMealId(mealId)
+        } 
+    })
+        //Add functionailty to filter form
 })
 
 
@@ -121,7 +134,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 function getData(url){
     return fetch(url).then(res => res.json())
 }
-function displayOnShowPanel(mealObj){
+function loadToShowPanel(mealObj){
     showPanel.innerHTML = `            
     <h1>${mealObj.strMeal}</h1>
     <h5 id="cuisine">Cuisine: ${mealObj.strArea}</h5>
@@ -153,5 +166,12 @@ function formatRecipe(mealObj){
     let recipe = mealObj.strInstructions.split('. ')
     recipe.forEach(line =>{
         recipeDiv.innerHTML += `<p>${line}</p>`
+    })
+}
+function loadToShowPanelByMealId(mealId){
+    getData(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+    .then(data => {
+       let mealObj = data.meals[0]
+       loadToShowPanel(mealObj)
     })
 }
