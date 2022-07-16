@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="./style.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
         <script src="./index.js"></script>
+        <title>Recipe Finder</title>
     </head>
     <body>
         <div id="header" class="row">
@@ -11,6 +12,7 @@
             <form id="searchForm" action="submit">
                 <label for="">Search by: </label>
                 <select id="dropDown">
+                    <option value="">-SELECT-</option>
                     <option value="search">Meal Search</option>
                     <option value="area">Area</option>
                     <option value="category">Category</option>
@@ -22,6 +24,7 @@
                 <button type="submit">Search</button>
             </form>
             <button id="randomBtn">Random Meal</button>
+            <button id="backButton">Back To Results</button>
         </div>
 
 
@@ -30,12 +33,34 @@
 
 
         <div id="mainContainer" class="row">
-            <div id="leftPanel" class="col-3 sidePanel"></div>
+            
+            <div id="leftPanel" class="col-3 sidePanel">
+                <h4>Search Results</h4>
+                <form id="filterForm" action="submit">
+                    <input id="keywordInput"type="text" placeholder="Keyword">
+                    <button type="submit">Filter</button>
+                    <button id="undoFilter">Undo Filter</button>
+                </form>
+                <ul id="resultsList"></ul>
+            </div>
+            
             <div id="centerPanel" class="col">
                 <div id="showPanel" class="row" data-id="0"></div>
-                <div id="comment" class="row"></div>
+                <div id="comment" class="row">
+                    <h4>Comment Section</h4>
+                    <form action="submit">
+                        <input id="userNameInput" type="text" placeholder="User Name">
+                        <input id="commentInput" type="text" placeholder="Leave comment here">  
+                        <button id="commentBtn" type="submit">Submit</button>                  
+                    </form>
+                    <div id="commentSection"></div>
+                </div>
             </div>
+            
             <div id="rightPanel" class="col-3 sidePanel"></div>
         </div>
     </body>
 </html>
+
+
+

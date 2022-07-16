@@ -65,7 +65,7 @@ select{
     align-items: center;
     display: block;
 }
-#showPanel h5{
+#showPanel h4{
     margin: 15px auto;
     
 }
@@ -89,7 +89,16 @@ select{
     text-align: center;
     padding: 20px;
     align-items: center;
+    height: max-content;
 }
+#commentDiv{
+    background-color: white;
+    width: 75%;
+    text-align: left;
+    padding: 15px;
+    margin: 15px auto;
+}
+
 #likeDiv{
     display: flex;
     width: fit-content;

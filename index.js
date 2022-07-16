@@ -111,8 +111,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
         getData('https://www.themealdb.com/api/json/v1/1/random.php')
         .then(data => {
             //display data on showPanel
-            console.log(data)
             loadToShowPanel(data.meals[0])
+
         })
     })
 
@@ -167,27 +167,78 @@ document.addEventListener('DOMContentLoaded',()=>{
     
 })
 
+    //Center Panel Functionality
+        //Like button
+document.addEventListener('DOMContentLoaded', ()=>{
+    const likes = document.querySelector('#likeNotes')
+    showPanel.addEventListener('click', (e)=>{
+        if(e.target.textContent === 'Like!'){
+            // updateLikes()
+            getLikes(showPanel.dataset.id)
+        }
+    })
+})
+
 
 // Functions that will most likely be used again
 function getData(url){
     return fetch(url).then(res => res.json())
 }
 function loadToShowPanel(mealObj){
-    showPanel.dataset.id = mealObj.idMeal
+      showPanel.dataset.id = mealObj.idMeal
     showPanel.innerHTML = `            
     <h1>${mealObj.strMeal}</h1>
-    <h5 id="cuisine">Cuisine: ${mealObj.strArea}</h5>
-    <h5 id="category">Category: ${mealObj.strCategory}</h5>
-    <div>
-    <p id="likes-note">LIKES: </p>        
+    <h4 id="cuisine">Cuisine: ${mealObj.strArea}</h4>
+    <h4 id="category">Category: ${mealObj.strCategory}</h4>
+    <div id="likeDiv">
+        <button id="likeBtn">Like!</button>
+        <p id="likesNote">0 &hearts;</p> 
+    </div>
     <img id="showImage" src="${mealObj.strMealThumb}" alt="">
-    <h5>Ingredient List</h5>
+    <h4>Ingredient List</h4>
     <ul id="ingredientList"></ul>
-    <div id="recipeDiv"><h5>Recipe & Instructions</h5></div>
+    <h4>Recipe & Instructions</h4>
+    <div id="recipeDiv"></div>
     `
     formatIngr(mealObj)
     formatRecipe(mealObj)
     document.querySelector('#leftPanel').style.display = "none"
+    
+    //Fetch like data and comment data
+    //loads Obj to showPanel with that data, if it exists
+ 
+        //Fetch likes and load to showPanel if they exist
+    getData('http://localhost:3000/likes')
+    .then(data =>{
+        const likeObj = data.find(obj => obj.idMeal === mealObj.idMeal)
+        if(likeObj){
+            likes = likeObj.likesCount
+            const text = document.querySelector('#likesNote').textContent.split(' ')
+            text[0] = likes
+            document.querySelector('#likesNote').textContent = text.join(' ')
+        }
+    })
+
+    //Fetch comments and load to showPanel if any exist
+    getData('http://localhost:3000/comments')
+    .then(data =>{
+        data.forEach(meal =>{
+            if(meal.idMeal === mealObj.idMeal){
+                document.querySelector('#commentSection').innerHTML += `
+                <div id="commentDiv">
+                    <h5>${meal.userName}</h5>
+                    <h6>${meal.date}</h6>
+                    <p>${meal.comment}</p>
+                </div>`
+            }
+        })
+    })
+
+
+
+
+
+  
 }
 function formatIngr(mealObj){
     ingredientList.innerHTML = ""
@@ -222,4 +273,52 @@ function hideLeftPanel(){
 function showLeftPanel(){
     document.querySelector('#backButton').style.display = 'none'
     document.querySelector('#leftPanel').style.display = 'block'
+}
+function patchLikes(likeId, updatedLikeCount){
+    fetch(`http://localhost:3000/likes/${likeId}`,{
+        method: 'PATCH',
+        headers:{
+            "Content-type":"application/json",
+            Accept: "application/json"
+        },
+        body: JSON.stringify({
+            "likesCount": `${updatedLikeCount}`
+        })
+    })
+    .then(res=>res.json())
+}
+function postLikes(idMeal, updatedLikeCount, mealName){
+                fetch('http://localhost:3000/likes',{
+                method: 'POST',
+                headers:{
+                    "Content-Type":"application/json",
+                    Accept: "application/json"
+                },
+                body: JSON.stringify({
+                    "idMeal": `${idMeal}`,
+                    "likesCount": `${updatedLikeCount}`,
+                    "strMeal": `${mealName}`
+                })
+            })
+}
+function getLikes(idMeal){
+    //Searches 'likes' db to see if the meal has any likes
+    getData('http://localhost:3000/likes')
+    .then(data =>{
+        let mealObj = data.find(meal => meal.idMeal === idMeal) 
+        let updatedLikeCount;     
+        //If the meal has likes, update DOM with new likes and update the db 
+        if(mealObj){
+            updatedLikeCount = parseInt(mealObj.likesCount) + 1        
+            patchLikes(mealObj.id, updatedLikeCount)
+        }else{
+            //if there aren't any likes in the DB, POST meal's first like
+            updatedLikeCount = 1
+            const mealName = showPanel.querySelector('h1').textContent
+            postLikes(idMeal, updatedLikeCount, mealName)
+        }
+        const text = document.querySelector('#likesNote').textContent.split(' ')
+        text[0] = updatedLikeCount
+        document.querySelector('#likesNote').textContent = text.join(' ')
+    })
 }
