@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         getData(url)
         .then(data => {
             data.meals.forEach(meal =>{
-                resultsList.innerHTML += `<li id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
+                resultsList.innerHTML += `<li data-id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
             })
         })
     }
@@ -102,6 +102,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
         searchForm.reset()
         searchInput.style.display = "none"
         secondDropDown.style.display = "none"
+        document.querySelector('#leftPanel').style.display = "block"
+
     })
 
         //Add Functionality to Random Button
@@ -113,20 +115,56 @@ document.addEventListener('DOMContentLoaded', ()=>{
             loadToShowPanel(data.meals[0])
         })
     })
+
+        //Add functionality to 'Back to results' button
+    document.querySelector('#backButton').addEventListener('click', ()=>{
+        showLeftPanel()
+    })
 })
 
 //Body
     //Left Panel Functionality
 document.addEventListener('DOMContentLoaded',()=>{
         //When a result is clicked - show panel is loaded with meal details
+    const leftPanel = document.querySelector('#leftPanel')
     const resultsList = document.querySelector('#resultsList')
-    resultsList.addEventListener('click', (e)=>{
+
+    leftPanel.addEventListener('click', (e)=>{
+       
         if(e.target.tagName === 'A'){
-            const mealId = e.target.parentNode.id
+            const mealId = e.target.parentNode.dataset.id
             loadToShowPanelByMealId(mealId)
-        } 
+            hideLeftPanel()
+        }
     })
-        //Add functionailty to filter form
+
+
+
+        //Add functionaility to filter form - Submit Event that filters results based on user input keyword
+    document.querySelector('#filterForm').addEventListener('submit', (e)=>{
+        e.preventDefault()
+        const results = resultsList.querySelectorAll('LI')
+        const keyword = document.querySelector('#keywordInput').value.toLowerCase()
+        results.forEach(node =>{
+            if(node.firstChild.textContent.toLowerCase().includes(keyword) === false){
+                node.style.display = "none"
+            }
+        })
+
+        
+//-------------------FIGURE OUT HOW TO UNHIDE THE FILTERED RESULTS ---------------//
+    //circle back
+    })       
+         //Add Functionailty to undo filter button - click event that removes filter
+    // document.querySelector('#filterForm').addEventListener('click', (e)=>{
+    //         if(e.target.id === "undoFilter"){
+    //             leftPanel.querySelectorAll('LI').forEach(node => {
+    //                 node.style.display = "block"
+    //                 console.log(node)
+    //             })
+    //         }
+    //     })
+    
 })
 
 
@@ -135,6 +173,7 @@ function getData(url){
     return fetch(url).then(res => res.json())
 }
 function loadToShowPanel(mealObj){
+    showPanel.dataset.id = mealObj.idMeal
     showPanel.innerHTML = `            
     <h1>${mealObj.strMeal}</h1>
     <h5 id="cuisine">Cuisine: ${mealObj.strArea}</h5>
@@ -148,6 +187,7 @@ function loadToShowPanel(mealObj){
     `
     formatIngr(mealObj)
     formatRecipe(mealObj)
+    document.querySelector('#leftPanel').style.display = "none"
 }
 function formatIngr(mealObj){
     ingredientList.innerHTML = ""
@@ -174,4 +214,12 @@ function loadToShowPanelByMealId(mealId){
        let mealObj = data.meals[0]
        loadToShowPanel(mealObj)
     })
+}
+function hideLeftPanel(){
+    document.querySelector('#backButton').style.display = "flex"
+    document.querySelector('#leftPanel').style.display = "none"
+}
+function showLeftPanel(){
+    document.querySelector('#backButton').style.display = 'none'
+    document.querySelector('#leftPanel').style.display = 'block'
 }
