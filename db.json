@@ -1,0 +1,19 @@
+{
+  "like": [
+    {
+      "id": 1,
+      "idMeal": "number",
+      "likesCount": "number",
+      "strMeal": "mealname"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "idMeal":"number",
+      "userName": "username",
+      "comment": "comment",
+      "date": "date"
+    }
+  ]
+}
