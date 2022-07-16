@@ -1,6 +1,13 @@
 body {
     background-color: #e9bc83;
 }
+input{
+    text-align: center;
+}
+select{
+    text-align: center;
+}
+
 /* Header------- */
 #header{
     text-align: center;
@@ -15,20 +22,41 @@ body {
 #secondaryDropDown{
     display: none;
 }
+#searchInput{
+    display: none;
+}
 
 /* Side Panels----- */
 .sidePanel{
     text-align: left;  
     color: white;
     background-color: #6e3845;
+    min-height: 750px;
+    text-align: center;
 }
-
+.sidePanel li{
+    text-align: left;
+    margin: 10px;
+}
+#leftPanel{
+    display: none;
+}
+#resultsList{
+    list-style: none;
+}
+#resultsList a{
+    text-decoration: none;
+}
 
 /* Center Panel */
 #showPanel{
     background-color: #cd7f4f;
     text-align: center;
     padding: 50px;
+    min-height: 750px;
+}
+#showPanel img{
+    width: 60%;
 }
 #comment{
     background-color: #e9bc83;
