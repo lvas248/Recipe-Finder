@@ -187,9 +187,23 @@ document.addEventListener('DOMContentLoaded', ()=>{
             patchLikes(document.querySelector('#showPanel').dataset.likeId, parseInt(splitLikes[0]))
         }
     })
+
+    //Add functionality to comment button - submit listener
+    document.querySelector('#commentForm').addEventListener('submit', (e)=>{
+    e.preventDefault()
+    postComment()
+    document.querySelector('#commentForm').reset()
+    })
 })
 
-//Add functionality to comment button
+//When a meal is loaded, pull comments in order by date
+//unfilter button still needs to be looked at
+//when page loads the top 10 rated comments are listed in the left panel in order 
+//when page loads the top rated meal loads to the showPanel
+
+
+
+
 
 // Functions that will most likely be used again
 function getData(url){
@@ -232,20 +246,15 @@ function loadToShowPanel(mealObj){
     })
 
     //Fetch comments and load to showPanel if any exist
+    document.querySelector('#commentSection').innerHTML = ""
     getData('http://localhost:3000/comments')
     .then(data =>{
         data.forEach(meal =>{
             if(meal.idMeal === mealObj.idMeal){
-                document.querySelector('#commentSection').innerHTML += `
-                <div id="commentDiv">
-                    <h5>${meal.userName}</h5>
-                    <h6>${meal.date}</h6>
-                    <p>${meal.comment}</p>
-                </div>`
+                loadCommentToDOM(meal)
             }
         })
     })
-
 
 
 
@@ -338,4 +347,37 @@ function getLikes(idMeal){
         text[0] = updatedLikeCount
         document.querySelector('#likesNote').textContent = text.join(' ')
     })
+}
+function postComment(e){
+    const idMeal = document.querySelector('#showPanel').dataset.id
+    const userName = document.querySelector('#userNameInput').value
+    const comment = document.querySelector('#commentInput').value
+    const date = Date().split(' ')
+    date.splice(4)
+
+    fetch('http://localhost:3000/comments',{
+        method: 'POST',
+        headers: {
+            "Content-type":"application/json",
+            Accept: "application/json"
+        },
+        body: JSON.stringify({
+            "idMeal": idMeal,
+            "userName": userName,
+            "comment": comment,
+            "date": date.join(' ')
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        loadCommentToDOM(data)
+    })
+}
+function loadCommentToDOM(commentObj){
+    document.querySelector('#commentSection').innerHTML += `
+    <div id="commentDiv">
+        <h5>${commentObj.userName}</h5>
+        <h6>${commentObj.date}</h6>
+        <p>${commentObj.comment}</p>
+    </div>`
 }
