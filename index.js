@@ -170,15 +170,26 @@ document.addEventListener('DOMContentLoaded',()=>{
     //Center Panel Functionality
         //Like button
 document.addEventListener('DOMContentLoaded', ()=>{
-    const likes = document.querySelector('#likeNotes')
     showPanel.addEventListener('click', (e)=>{
         if(e.target.textContent === 'Like!'){
-            // updateLikes()
-            getLikes(showPanel.dataset.id)
+            e.target.textContent = "Unlike"
+            getLikes(showPanel.dataset.id) 
+
+        }else if(e.target.textContent === "Unlike"){
+            e.target.textContent = "Like!"
+            //Get current meal's likes from DOM
+            let likes = document.querySelector('#likesNote').textContent
+            const splitLikes = likes.split(' ')
+            //Subtract 1 like
+            splitLikes[0] = parseInt(splitLikes[0]) - 1
+            document.querySelector('#likesNote').textContent = splitLikes.join(' ')
+            //Patch updated like count to DB
+            patchLikes(document.querySelector('#showPanel').dataset.likeId, parseInt(splitLikes[0]))
         }
     })
 })
 
+//Add functionality to comment button
 
 // Functions that will most likely be used again
 function getData(url){
@@ -216,6 +227,7 @@ function loadToShowPanel(mealObj){
             const text = document.querySelector('#likesNote').textContent.split(' ')
             text[0] = likes
             document.querySelector('#likesNote').textContent = text.join(' ')
+            document.querySelector('#showPanel').dataset.likeId = likeObj.id
         }
     })
 
@@ -285,7 +297,6 @@ function patchLikes(likeId, updatedLikeCount){
             "likesCount": `${updatedLikeCount}`
         })
     })
-    .then(res=>res.json())
 }
 function postLikes(idMeal, updatedLikeCount, mealName){
                 fetch('http://localhost:3000/likes',{
@@ -300,6 +311,11 @@ function postLikes(idMeal, updatedLikeCount, mealName){
                     "strMeal": `${mealName}`
                 })
             })
+            .then(res => res.json())
+            .then(data =>{
+                document.querySelector('#showPanel').dataset.likeId = data.id
+            })
+
 }
 function getLikes(idMeal){
     //Searches 'likes' db to see if the meal has any likes
@@ -312,11 +328,12 @@ function getLikes(idMeal){
             updatedLikeCount = parseInt(mealObj.likesCount) + 1        
             patchLikes(mealObj.id, updatedLikeCount)
         }else{
-            //if there aren't any likes in the DB, POST meal's first like
+        //if there aren't any likes in the DB, POST meal's first like
             updatedLikeCount = 1
             const mealName = showPanel.querySelector('h1').textContent
             postLikes(idMeal, updatedLikeCount, mealName)
         }
+        //update DOM with new like count
         const text = document.querySelector('#likesNote').textContent.split(' ')
         text[0] = updatedLikeCount
         document.querySelector('#likesNote').textContent = text.join(' ')
