@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const searchInput = document.querySelector('#searchInput')
     const searchForm = document.querySelector('#searchForm')
     const randomBtn = document.querySelector('#randomBtn')
-    const showPanel = document.querySelector('#showPanel')
     const resultsList = document.querySelector('#resultsList')
 
 
@@ -196,16 +195,34 @@ document.addEventListener('DOMContentLoaded', ()=>{
     })
 })
 
-//When a meal is loaded, pull comments in order by date
-//unfilter button still needs to be looked at
-//when page loads the top 10 rated comments are listed in the left panel in order 
-//when page loads the top rated meal loads to the showPanel
 
+//when page loads, the top 10 rated comments are listed in the left panel in order 
+document.addEventListener('DOMContentLoaded', ()=>{
+    getData('http://localhost:3000/likes')
+    .then(data =>{
+        const topTen = sortTopTen(data)
+        topTen.forEach(likeObj =>{
+            document.querySelector('#topTenList').innerHTML += `
+            <li data-id="${likeObj.idMeal}"><p>${likeObj.likesCount} &hearts;</p><a href="#">${likeObj.strMeal}</a></li>
+            `
+        })
+        
+    })
+})
+//when page loads the top rated meal loads to the showPanel
+//unfilter button still needs to be looked at
 
 
 
 
 // Functions that will most likely be used again
+function sortTopTen(array){
+    array.sort((a,b)=>{
+        return b.likesCount - a.likesCount
+    })
+    array.splice(10)
+    return array
+}
 function getData(url){
     return fetch(url).then(res => res.json())
 }
@@ -249,10 +266,12 @@ function loadToShowPanel(mealObj){
     document.querySelector('#commentSection').innerHTML = ""
     getData('http://localhost:3000/comments')
     .then(data =>{
-        data.forEach(meal =>{
+        //reverse the array of objs so that comments are listed from most recent to oldest
+        data.reverse().forEach(meal =>{
+            // const commentArray = []
             if(meal.idMeal === mealObj.idMeal){
                 loadCommentToDOM(meal)
-            }
+            } 
         })
     })
 
