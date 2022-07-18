@@ -167,10 +167,25 @@ document.addEventListener('DOMContentLoaded',()=>{
 })
 
     //Center Panel Functionality
-        //Like button
+      
 document.addEventListener('DOMContentLoaded', ()=>{
-
     
+
+        //Load top rated Meal to the showPanel
+        getData('http://localhost:3000/likes')
+        .then(data =>{
+            data.sort((a,b)=>{
+                return b.likesCount - a.likesCount
+            })
+           loadToShowPanelByMealId(data[0].idMeal, ()=>{
+            const topMeal = document.createElement('h2')
+            topMeal.textContent = "Top Rated Meal!"
+            showPanel.prepend(topMeal)
+           })
+        })
+        
+
+        //Like/Unlike button
     showPanel.addEventListener('click', (e)=>{
         if(e.target.textContent === 'Like!'){
             e.target.textContent = "Unlike"
@@ -212,7 +227,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     topTenList.append(li)
                 })
             }
-           
         }
         else if(e.target.textContent === "Unlike"){
 
@@ -253,6 +267,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 document.addEventListener('DOMContentLoaded', ()=>{
     //when page loads, the top 10 rated comments are listed in the left panel in order 
     loadTopTen()
+
+
     //Add click event to top 10 - load to show panel when clicked
     document.querySelector('#topTenList').addEventListener('click', (e)=>{
         if(e.target.tagName === "A"){
@@ -262,7 +278,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })
 
 
-//when page loads the top rated meal loads to the showPanel
+
 //unfilter button still needs to be looked at
 
 
@@ -303,7 +319,7 @@ function sortTopTen(array){
 function getData(url){
     return fetch(url).then(res => res.json())
 }
-function loadToShowPanel(mealObj){
+function loadToShowPanel(mealObj, addTopMealBanner = null){
       showPanel.dataset.id = mealObj.idMeal
     showPanel.innerHTML = `            
     <h1 id="mealName">${mealObj.strMeal}</h1>
@@ -336,6 +352,11 @@ function loadToShowPanel(mealObj){
             text[0] = likes
             document.querySelector('#likesNote').textContent = text.join(' ')
             document.querySelector('#showPanel').dataset.likeId = likeObj.id
+
+            //load top meal banner, it it's the top meal
+            const topMeal = document.createElement('h2')
+            topMeal.textContent = "Top Rated Meal!"
+           showPanel.prepend(topMeal)
         }
     })
 
@@ -355,7 +376,7 @@ function loadToShowPanel(mealObj){
 
 
 
-  
+
 }
 function formatIngr(mealObj){
     ingredientList.innerHTML = ""
@@ -376,7 +397,7 @@ function formatRecipe(mealObj){
         recipeDiv.innerHTML += `<p>${line}</p>`
     })
 }
-function loadToShowPanelByMealId(mealId){
+function loadToShowPanelByMealId(mealId, addTopMealBanner = null){
     getData(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
     .then(data => {
        let mealObj = data.meals[0]
