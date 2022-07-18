@@ -117,5 +117,8 @@ select{
     height: fit-content;
     margin: 0 5px;
 }
+#showPanel h2{
+    color:white;
+}
 
 
