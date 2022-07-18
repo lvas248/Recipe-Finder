@@ -169,20 +169,73 @@ document.addEventListener('DOMContentLoaded',()=>{
     //Center Panel Functionality
         //Like button
 document.addEventListener('DOMContentLoaded', ()=>{
+
+    
     showPanel.addEventListener('click', (e)=>{
         if(e.target.textContent === 'Like!'){
             e.target.textContent = "Unlike"
-            getLikes(showPanel.dataset.id) 
+            getLikes(showPanel.dataset.id) //updates the db and the showPanel
+            
 
-        }else if(e.target.textContent === "Unlike"){
+            const topTenList = document.querySelector('#topTenList')
+            const topTen = topTenList.querySelectorAll('LI')
+            const topTenArray = Array.from(topTen)
+
+            //check to see if meal is already in the top 10
+            if(topTenArray.find(li => li.dataset.id === showPanel.dataset.id)){
+                // find li in right panel and update likes + 1
+                let foundLi = topTenArray.find(li => li.dataset.id === showPanel.dataset.id)
+                let foundLiLikesCount = foundLi.querySelector('#sideLikes').innerText.split(' ')
+                foundLiLikesCount[0] = parseInt(foundLiLikesCount) + 1
+                foundLi.querySelector('#sideLikes').innerText = foundLiLikesCount.join(' ')
+
+                //then fire sortList() andto resort the right panel
+                const sortedList = sortList()
+                topTenList.innerHTML = ""
+                sortedList.forEach(li => {
+                    topTenList.append(li)
+                })
+            }
+            else{
+                //create new li - then fire sortList(newLi) - load top ten to right panel
+                const mealId = showPanel.dataset.id 
+                let likesCount = showPanel.querySelector('#likesNote').innerText.split(' ')[0]
+                likesCount = parseInt(likesCount)+ 1
+                const strMeal = showPanel.querySelector('#mealName').innerText
+                    //create new li with current meal details and add to Right panel - now right panel has 11 meals
+                topTenList.innerHTML +=
+                `<li data-id="${mealId}"><p id="sideLikes">${likesCount} &hearts;</p><a href="#">${strMeal}</a></li>`
+                    //fire sortList() - resorts and returns top 10 meals
+                const sortedList = sortList()
+                topTenList.innerHTML = ""
+                sortedList.forEach(li =>{
+                    topTenList.append(li)
+                })
+            }
+           
+        }
+        else if(e.target.textContent === "Unlike"){
+
+            const topTenList = document.querySelector('#topTenList')
+            const topTen = topTenList.querySelectorAll('LI')
+            const topTenArray = Array.from(topTen)
             e.target.textContent = "Like!"
             //Get current meal's likes from DOM
             let likes = document.querySelector('#likesNote').textContent
             const splitLikes = likes.split(' ')
             //Subtract 1 like
             splitLikes[0] = parseInt(splitLikes[0]) - 1
+            //update showpanel
             document.querySelector('#likesNote').textContent = splitLikes.join(' ')
-            //Patch updated like count to DB
+            //update rightpanel
+                //if meal is in the top 10 list, update 1 less like, sort list
+                if(topTenArray.find(li => li.dataset.id === showPanel.dataset.id)){
+                    let foundLi = topTenArray.find(li => li.dataset.id === showPanel.dataset.id)
+                    let foundLiLikesCount = foundLi.querySelector('#sideLikes').innerText.split(' ')
+                    foundLiLikesCount[0] = parseInt(foundLiLikesCount) - 1
+                    foundLi.querySelector('#sideLikes').innerText = foundLiLikesCount.join(' ')
+                }
+                    //Patch updated like count to DB
             patchLikes(document.querySelector('#showPanel').dataset.likeId, parseInt(splitLikes[0]))
         }
     })
@@ -196,19 +249,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
 })
 
 
-//when page loads, the top 10 rated comments are listed in the left panel in order 
+    //Right Panel Functionality
 document.addEventListener('DOMContentLoaded', ()=>{
-    getData('http://localhost:3000/likes')
-    .then(data =>{
-        const topTen = sortTopTen(data)
-        topTen.forEach(likeObj =>{
-            document.querySelector('#topTenList').innerHTML += `
-            <li data-id="${likeObj.idMeal}"><p>${likeObj.likesCount} &hearts;</p><a href="#">${likeObj.strMeal}</a></li>
-            `
-        })
-        
-    })
+    //when page loads, the top 10 rated comments are listed in the left panel in order 
+    loadTopTen()
+    //Add click event to top 10 - load to show panel when clicked
+    document.querySelector('#topTenList').addEventListener('click', (e)=>{
+        if(e.target.tagName === "A"){
+            loadToShowPanelByMealId(e.target.parentNode.dataset.id)
+        }
 })
+})
+
+
 //when page loads the top rated meal loads to the showPanel
 //unfilter button still needs to be looked at
 
@@ -216,6 +269,30 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
 // Functions that will most likely be used again
+
+function sortList(){
+    //grabs all li's in the right panel, organizes them by most likes, then returns 10 most liked meals
+    const topTenList = document.querySelector('#topTenList')
+    const topTen = topTenList.querySelectorAll('LI')
+    const array = Array.from(topTen)
+    array.sort((a,b)=>{
+        return b.textContent.split(' ')[0] - a.textContent.split(' ')[0]
+    })
+    
+    return array.slice(0,10)
+}
+
+function loadTopTen(){
+    getData('http://localhost:3000/likes')
+    .then(data =>{
+        const topTen = sortTopTen(data)
+        topTen.forEach(likeObj =>{
+            document.querySelector('#topTenList').innerHTML += `
+            <li data-id="${likeObj.idMeal}"><p id="sideLikes">${likeObj.likesCount} &hearts;</p><a href="#">${likeObj.strMeal}</a></li>`
+        })
+    })
+}
+
 function sortTopTen(array){
     array.sort((a,b)=>{
         return b.likesCount - a.likesCount
@@ -229,7 +306,7 @@ function getData(url){
 function loadToShowPanel(mealObj){
       showPanel.dataset.id = mealObj.idMeal
     showPanel.innerHTML = `            
-    <h1>${mealObj.strMeal}</h1>
+    <h1 id="mealName">${mealObj.strMeal}</h1>
     <h4 id="cuisine">Cuisine: ${mealObj.strArea}</h4>
     <h4 id="category">Category: ${mealObj.strCategory}</h4>
     <div id="likeDiv">
@@ -351,7 +428,7 @@ function getLikes(idMeal){
     .then(data =>{
         let mealObj = data.find(meal => meal.idMeal === idMeal) 
         let updatedLikeCount;     
-        //If the meal has likes, update DOM with new likes and update the db 
+        //If the meal has likes, patch the db 
         if(mealObj){
             updatedLikeCount = parseInt(mealObj.likesCount) + 1        
             patchLikes(mealObj.id, updatedLikeCount)
@@ -361,7 +438,7 @@ function getLikes(idMeal){
             const mealName = showPanel.querySelector('h1').textContent
             postLikes(idMeal, updatedLikeCount, mealName)
         }
-        //update DOM with new like count
+        //update DOM (showPanel) with new like count
         const text = document.querySelector('#likesNote').textContent.split(' ')
         text[0] = updatedLikeCount
         document.querySelector('#likesNote').textContent = text.join(' ')
@@ -400,3 +477,16 @@ function loadCommentToDOM(commentObj){
         <p>${commentObj.comment}</p>
     </div>`
 }
+// function resortTopTen(meal){
+//     const topTenList = document.querySelector('#topTenList')
+//     const topTen = document.querySelectorAll('LI')
+    
+//     console.log(topTenList)
+// }
+//meal is liked
+//add meal to right panel, run sort
+// function get(li){
+//     const topTenList = document.querySelector('#topTenList')
+//     const topTen = topTenList.querySelectorAll('LI')
+//     topTen.push(li)
+// }
