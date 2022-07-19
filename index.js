@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         getData(url)
         .then(data => {
             data.meals.forEach(meal =>{
-                resultsList.innerHTML += `<li data-id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
+                resultsList.innerHTML += `<li id="${meal.strMeal}" data-id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
             })
         })
     }
@@ -127,43 +127,53 @@ document.addEventListener('DOMContentLoaded',()=>{
         //When a result is clicked - show panel is loaded with meal details
     const leftPanel = document.querySelector('#leftPanel')
     const resultsList = document.querySelector('#resultsList')
+    
 
     leftPanel.addEventListener('click', (e)=>{
-       
+        const currentResults = resultsList.querySelectorAll('LI')
+
         if(e.target.tagName === 'A'){
             const mealId = e.target.parentNode.dataset.id
             loadToShowPanelByMealId(mealId)
             hideLeftPanel()
         }
+        else if(e.target.textContent === "Undo Filter"){
+            document.querySelector('#filteredList').innerHTML = ""
+            console.log(resultsList.outerHTML)
+         
+
+        }
     })
+
+
 
 
 
         //Add functionaility to filter form - Submit Event that filters results based on user input keyword
     document.querySelector('#filterForm').addEventListener('submit', (e)=>{
         e.preventDefault()
-        const results = resultsList.querySelectorAll('LI')
+        const results = Array.from(resultsList.querySelectorAll('LI'))
         const keyword = document.querySelector('#keywordInput').value.toLowerCase()
-        results.forEach(node =>{
-            if(node.firstChild.textContent.toLowerCase().includes(keyword) === false){
-                node.style.display = "none"
-            }
+        const filteredList = results.filter(li=>{
+            return li.firstChild.textContent.toLowerCase().includes(keyword)
         })
+        filteredList.forEach(li =>{
+            document.querySelector('#filteredList').append(li)}
+            )
+        resultsList.style.display = "none"
+            //trying new method^^
 
+        // results.forEach(li =>{
+        //     if(li.firstChild.textContent.toLowerCase().includes(keyword) === false){
+        //         li.style.display = "none"
+        //     }
         
-//-------------------FIGURE OUT HOW TO UNHIDE THE FILTERED RESULTS ---------------//
-    //circle back
+        // })
+
+        //Orginal filter method^^^
+        document.querySelector('#undoFilterBtn').style.display = "inline-block"
+        document.querySelector('#filterBtn').style.display = "none"
     })       
-         //Add Functionailty to undo filter button - click event that removes filter
-    // document.querySelector('#filterForm').addEventListener('click', (e)=>{
-    //         if(e.target.id === "undoFilter"){
-    //             leftPanel.querySelectorAll('LI').forEach(node => {
-    //                 node.style.display = "block"
-    //                 console.log(node)
-    //             })
-    //         }
-    //     })
-    
 })
 
     //Center Panel Functionality
@@ -177,11 +187,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
             data.sort((a,b)=>{
                 return b.likesCount - a.likesCount
             })
-           loadToShowPanelByMealId(data[0].idMeal, ()=>{
-            const topMeal = document.createElement('h2')
-            topMeal.textContent = "Top Rated Meal!"
-            showPanel.prepend(topMeal)
-           })
+           loadToShowPanelByMealId(data[0].idMeal, addTopBanner)
         })
         
 
@@ -319,7 +325,14 @@ function sortTopTen(array){
 function getData(url){
     return fetch(url).then(res => res.json())
 }
-function loadToShowPanel(mealObj, addTopMealBanner = null){
+function loadToShowPanelByMealId(mealId, addTopBanner){
+    getData(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+    .then(data => {
+       let mealObj = data.meals[0]
+       loadToShowPanel(mealObj, addTopBanner)
+    })
+}
+function loadToShowPanel(mealObj, addTopBanner){
       showPanel.dataset.id = mealObj.idMeal
     showPanel.innerHTML = `            
     <h1 id="mealName">${mealObj.strMeal}</h1>
@@ -352,11 +365,10 @@ function loadToShowPanel(mealObj, addTopMealBanner = null){
             text[0] = likes
             document.querySelector('#likesNote').textContent = text.join(' ')
             document.querySelector('#showPanel').dataset.likeId = likeObj.id
-
-            //load top meal banner, it it's the top meal
-            const topMeal = document.createElement('h2')
-            topMeal.textContent = "Top Rated Meal!"
-           showPanel.prepend(topMeal)
+            
+            if(addTopBanner){
+                addTopBanner()
+            }
         }
     })
 
@@ -370,13 +382,14 @@ function loadToShowPanel(mealObj, addTopMealBanner = null){
             if(meal.idMeal === mealObj.idMeal){
                 loadCommentToDOM(meal)
             } 
+
         })
     })
-
-
-
-
-
+}
+function addTopBanner(){
+    const topMeal = document.createElement('h2')
+    topMeal.textContent = "Top Rated Meal!"
+    showPanel.prepend(topMeal)
 }
 function formatIngr(mealObj){
     ingredientList.innerHTML = ""
@@ -397,13 +410,7 @@ function formatRecipe(mealObj){
         recipeDiv.innerHTML += `<p>${line}</p>`
     })
 }
-function loadToShowPanelByMealId(mealId, addTopMealBanner = null){
-    getData(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
-    .then(data => {
-       let mealObj = data.meals[0]
-       loadToShowPanel(mealObj)
-    })
-}
+
 function hideLeftPanel(){
     document.querySelector('#backButton').style.display = "flex"
     document.querySelector('#leftPanel').style.display = "none"
@@ -498,16 +505,6 @@ function loadCommentToDOM(commentObj){
         <p>${commentObj.comment}</p>
     </div>`
 }
-// function resortTopTen(meal){
-//     const topTenList = document.querySelector('#topTenList')
-//     const topTen = document.querySelectorAll('LI')
-    
-//     console.log(topTenList)
-// }
-//meal is liked
-//add meal to right panel, run sort
-// function get(li){
-//     const topTenList = document.querySelector('#topTenList')
-//     const topTen = topTenList.querySelectorAll('LI')
-//     topTen.push(li)
-// }
+
+//figure out back
+//figue out filter issue
