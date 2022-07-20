@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         getData(url)
         .then(data => {
             data.meals.forEach(meal =>{
-                resultsList.innerHTML += `<li id="${meal.strMeal}" data-id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
+                resultsList.innerHTML += `<li data-id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
             })
         })
     }
@@ -125,45 +125,37 @@ document.addEventListener('DOMContentLoaded', ()=>{
     //When a result is clicked - show panel is loaded with meal details
     const leftPanel = document.querySelector('#leftPanel')
     leftPanel.addEventListener('click', (e)=>{
-        const currentResults = resultsList.querySelectorAll('LI')
-
         if(e.target.tagName === 'A'){
             const mealId = e.target.parentNode.dataset.id
             loadToShowPanelByMealId(mealId)
             hideLeftPanel()
-        }
-        else if(e.target.textContent === "Undo Filter"){
-            document.querySelector('#filteredList').innerHTML = ""
-            console.log(resultsList.outerHTML)
         }
     })
 
     //Add functionaility to filter form - Submit Event that filters results based on user input keyword
     document.querySelector('#filterForm').addEventListener('submit', (e)=>{
         e.preventDefault()
-        const results = Array.from(resultsList.querySelectorAll('LI'))
+        const results = resultsList.querySelectorAll('LI')
         const keyword = document.querySelector('#keywordInput').value.toLowerCase()
-        const filteredList = results.filter(li=>{
-            return li.firstChild.textContent.toLowerCase().includes(keyword)
+        const filteredResults = Array.from(results).filter(li=>{
+            return (li.firstChild.textContent.toLowerCase().includes(keyword)) === false
         })
-        filteredList.forEach(li =>{
-            document.querySelector('#filteredList').append(li)}
-            )
-        resultsList.style.display = "none"
-            //trying new method^^
-
-        // results.forEach(li =>{
-        //     if(li.firstChild.textContent.toLowerCase().includes(keyword) === false){
-        //         li.style.display = "none"
-        //     }
-        
-        // })
-
-        //Orginal filter method^^^
+        filteredResults.forEach(li =>{
+                li.style.display = "none"
+                // li.remove()
+            }
+        )
         document.querySelector('#undoFilterBtn').style.display = "inline-block"
         document.querySelector('#filterBtn').style.display = "none"
+
+        document.querySelector('#undoFilterBtn').addEventListener('click',()=>{
+            filteredResults.forEach(li=>{
+                li.style.display = "block"
+            })
+        })
     })   
 
+  
 
 
     //Center Panel Functionality
@@ -435,12 +427,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
         document.querySelector('#commentSection').innerHTML = ""
         getData('http://localhost:3000/comments')
         .then(data =>{
-          //reverse the array of objs so that comments are listed from most recent to oldest
-        data.reverse().forEach(meal =>{
-              // const commentArray = []
-            if(meal.idMeal === mealObj.idMeal){
-                loadCommentToDOM(meal)
-            } 
+            data.forEach(meal =>{
+                // const commentArray = []
+                if(meal.idMeal === mealObj.idMeal){
+                    loadCommentToDOM(meal)
+                } 
           })
         })
     }
@@ -470,13 +461,29 @@ document.addEventListener('DOMContentLoaded', ()=>{
         })
     }
     function loadCommentToDOM(commentObj){
-        document.querySelector('#commentSection').innerHTML += `
-        <div id="commentDiv">
-            <h5>${commentObj.userName}</h5>
+        const div = document.createElement('div')
+        div.id = "commentDiv"
+        div.innerHTML =
+            `<h5>${commentObj.userName}</h5>
             <h6>${commentObj.date}</h6>
-            <p>${commentObj.comment}</p>
-        </div>`
+            <p>${commentObj.comment}</p>`
+       
+        document.querySelector('#commentSection').prepend(div)
+
     }
 
 
 })
+
+
+//HTML collections constain elements
+    //getElementByTagName --- 
+    //getElementsByClass
+    //document.forms
+    //children
+
+//Node Lists
+    //querySelectorAll
+    //childNodes
+    //getElementsByName
+        //in nodeLists//can access list item by index
