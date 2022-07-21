@@ -30,14 +30,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
        //User selects an option from the drop down menu
         //depending on option selected, either a text input field or a secondary drop down menu will appear
     dropDown.addEventListener('change', ()=>{
+        //Meal Search or ingridents are selected initially -> show text field for user search
         if(dropDown.value === "search" || dropDown.value === "ingredient"){
             secondDropDown.innerHTML = ""
             searchInput.style.display = "inline-block" 
             secondDropDown.style.display = "none"    
-
+        //Area or Category are selected -> populate secondary drop down menu with corresponding data
         }else if(dropDown.value === 'area' || dropDown.value === 'category'){
             secondDropDown.innerHTML = ""
             getSecondDropDownDetails()  
+
             function getSecondDropDownDetails(){
                 //get data for secondary dropdown based off of initial drop down selection
                 getData(`https://www.themealdb.com/api/json/v1/1/list.php?${dropDown.value[0]}=list`)
@@ -50,9 +52,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     })
                 })
             }
+
             searchInput.style.display = "none"
             secondDropDown.style.display = "inline-block"
-            
+        //First Letter is selected -> populate secondary dropdown with Alphabet
         }else if(dropDown.value === "first letter"){
             secondDropDown.innerHTML =""
             const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
@@ -62,6 +65,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 secondDropDown.innerHTML += `<option value=${letter}>${letter}</option>`
             })
         }
+        //-Select- is selected -> hide secondary dropdown & text input
         else{
             secondDropDown.innerHTML = ""
             searchInput.style.display = "none"
@@ -73,9 +77,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
         //add submit event listener for when search button is pushed
     searchForm.addEventListener('submit', (e)=>{
         e.preventDefault()
-        // if(dropDown.value){
-            resultsList.innerHTML=""
-            populateResultsToLeftPanel()
+        resultsList.innerHTML=""
+        populateResultsToLeftPanel()
 
         function populateResultsToLeftPanel(){
             let searchOrFilter;
@@ -117,6 +120,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     }else{
                         data.meals.forEach(meal =>{
                             resultsList.innerHTML += `<li data-id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
+
                         })
                     }    
                
@@ -157,7 +161,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 //Body
 
     //Left Panel Functionality
-    //When a result is clicked - show panel is loaded with meal details
+    //Add click event - when results is clicked show panel is loaded with meal details
     const leftPanel = document.querySelector('#leftPanel')
     leftPanel.addEventListener('click', (e)=>{
         if(e.target.tagName === 'A'){
@@ -183,62 +187,32 @@ document.addEventListener('DOMContentLoaded', ()=>{
             fitleredList.map(li =>{
                 li.style.display = "none"
             })
-
+            //click event for undo filter button
             leftPanel.addEventListener('click', (e)=>{
                 if(e.target.id === 'undoFilterBtn'){
-                resultsList.remove()
-                    const newResultsList = document.createElement('UL')
-                    results.forEach(li=>{
-                        newResultsList.append(li)
+                    fitleredList.map(li=>{
+                        li.style.display = ""
+                        document.querySelector('#undoFilterBtn').style.display = "none"
+                        document.querySelector('#filterBtn').style.display = "inline-block"
                     })
-                    leftPanel.append(newResultsList)
                 }
             }) 
         }else{
-            alert("Please type in keyword")
+            //alert user when filter is pushed with no text input
+            alert("Please type in a keyword")
         }
-        
-        // const results = resultsList.querySelectorAll('LI')
-        // const keyword = document.querySelector('#keywordInput').value.toLowerCase()
-        // const filteredResults = Array.from(results).filter(li=>{
-        //     return (li.firstChild.textContent.toLowerCase().includes(keyword)) === false
-        // })
-        // filteredResults.forEach(li =>{
-        //         li.style.display = "none"
-        //         // li.remove()
-        //     }
-        // )
-        // document.querySelector('#undoFilterBtn').style.display = "inline-block"
-        // document.querySelector('#filterBtn').style.display = "none"
-
-        // document.querySelector('#undoFilterBtn').addEventListener('click',()=>{
-        //     const ul = document.getElementById('resultsList')
-        //     Array.from(ul.getElementsByTagName('LI')).forEach(li=>{
-        //         li.style.display = "block"
-        //     })
-            
-        // })
     })   
 
   
-
+//Go through like and unline functionality again and optimize
 
     //Center Panel Functionality
-        //Load top rated Meal to the showPanel
-    getData('http://localhost:3000/likes')
-    .then(data =>{
-        data.sort((a,b)=>{
-            return b.likesCount - a.likesCount
-        })
-        loadToShowPanelByMealId(data[0].idMeal, addTopBanner)
-    })
-
       //Like/Unlike button
     showPanel.addEventListener('click', (e)=>{
         if(e.target.textContent === 'Like!'){
             e.target.textContent = "Unlike"
-            getLikes(showPanel.dataset.id) //updates the db and the showPanel
-            function getLikes(idMeal){
+            checkLikes(showPanel.dataset.id) //updates the db and the showPanel
+            function checkLikes(idMeal){
                 //Searches 'likes' db to see if the meal has any likes
                 getData('http://localhost:3000/likes')
                 .then(data =>{
@@ -292,7 +266,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 foundLiLikesCount[0] = parseInt(foundLiLikesCount) + 1
                 foundLi.querySelector('#sideLikes').innerText = foundLiLikesCount.join(' ')
 
-                //then fire sortList() andto resort the right panel
+                //then fire sortList() andto re-sort the right panel
                 const sortedList = sortList()
                 topTenList.innerHTML = ""
                 sortedList.forEach(li => {
@@ -300,7 +274,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 })
             }
             else{
-                //create new li - then fire sortList(newLi) - load top ten to right panel
+                //create new li - append to right panel - fire sortList() - load top ten to right panel
                 const mealId = showPanel.dataset.id 
                 let likesCount = showPanel.querySelector('#likesNote').innerText.split(' ')[0]
                 likesCount = parseInt(likesCount)+ 1
@@ -339,7 +313,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 }
                     //Patch updated like count to DB
             patchLikes(document.querySelector('#showPanel').dataset.likeId, parseInt(splitLikes[0]))
-        }
+        }   
     })
 
     //Add functionality to comment button - submit listener
@@ -377,9 +351,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
     //Right Panel Functionality
-        //when page loads, the top 10 rated comments are listed in the left panel in order 
-        loadTopTen()
-        function loadTopTen(){
+        //when page loads, the top 10 rated comments are listed in the right panel in order 
+        //Top rated meal is displayed on the showpanel
+        loadTopTen() 
+        function loadTopTen(){ 
             getData('http://localhost:3000/likes')
             .then(data =>{
                 const topTen = sortTopTen(data)
@@ -388,6 +363,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
                         return b.likesCount - a.likesCount
                     })
                     array.splice(10)
+
+                    //Add Top Rated Meal to show panel
+                    loadToShowPanelByMealId(array[0].idMeal, addTopBanner)
                     return array
                 }
                 topTen.forEach(likeObj =>{
@@ -540,15 +518,3 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 })
 
-
-//HTML collections constain elements
-    //getElementByTagName --- 
-    //getElementsByClass
-    //document.forms
-    //children
-
-//Node Lists
-    //querySelectorAll
-    //childNodes
-    //getElementsByName
-        //in nodeLists//can access list item by index
