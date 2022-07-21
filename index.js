@@ -24,42 +24,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
 //HEADER Functionality---------
-    function getSecondDropDownDetails(){
-        getData(`https://www.themealdb.com/api/json/v1/1/list.php?${dropDown.value[0]}=list`)
-        .then(data => {
-            const chimi = 'str' + dropDown.value[0].toUpperCase() + dropDown.value.substring(1)
-            data.meals.forEach(meal =>{
-                secondDropDown.innerHTML += `<option value=${meal[chimi]}>${meal[chimi]}</option>`
-            })
-        })
-    }
-    function populateResultsToLeftPanel(){
-        let searchOrFilter;
-        let searchBy;
-        if(dropDown.value === 'search'){
-            searchOrFilter = "search"
-            searchBy = searchInput.value
-        }
-        else if(dropDown.value === 'first letter'){
-            searchOrFilter = "search"
-            searchBy = secondDropDown.value
-        }
-        else if(dropDown.value === "ingredient"){
-            searchOrFilter = "filter"
-            searchBy = searchInput.value
-        }
-        else{
-            searchOrFilter = "filter"
-            searchBy = secondDropDown.value
-        }
-        const url = `https://www.themealdb.com/api/json/v1/1/${searchOrFilter}.php?${dropDown.value[0]}=${searchBy}`
-        getData(url)
-        .then(data => {
-            data.meals.forEach(meal =>{
-                resultsList.innerHTML += `<li data-id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
-            })
-        })
-    }
+  
+
 
        //User selects an option from the drop down menu
         //depending on option selected, either a text input field or a secondary drop down menu will appear
@@ -71,7 +37,19 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
         }else if(dropDown.value === 'area' || dropDown.value === 'category'){
             secondDropDown.innerHTML = ""
-            getSecondDropDownDetails()
+            getSecondDropDownDetails()  
+            function getSecondDropDownDetails(){
+                //get data for secondary dropdown based off of initial drop down selection
+                getData(`https://www.themealdb.com/api/json/v1/1/list.php?${dropDown.value[0]}=list`)
+                .then(data => {
+                    //meal[strCategory] or str[Area] -> pulls info from data
+                    const chimi = 'str' + dropDown.value[0].toUpperCase() + dropDown.value.substring(1)
+                    // console.log(data.meals)
+                    data.meals.forEach(meal =>{
+                        secondDropDown.innerHTML += `<option value=${meal[chimi]}>${meal[chimi]}</option>`
+                    })
+                })
+            }
             searchInput.style.display = "none"
             secondDropDown.style.display = "inline-block"
             
@@ -95,12 +73,69 @@ document.addEventListener('DOMContentLoaded', ()=>{
         //add submit event listener for when search button is pushed
     searchForm.addEventListener('submit', (e)=>{
         e.preventDefault()
-        resultsList.innerHTML=""
-        populateResultsToLeftPanel()
-        searchForm.reset()
-        searchInput.style.display = "none"
-        secondDropDown.style.display = "none"
-        showLeftPanel()
+        // if(dropDown.value){
+            resultsList.innerHTML=""
+            populateResultsToLeftPanel()
+
+        function populateResultsToLeftPanel(){
+            let searchOrFilter;
+            let searchBy;
+
+        //set url for get request based on drop down selections
+            //Meal search is selected
+            if(dropDown.value === 'search'){
+                searchOrFilter = "search"
+                //grab value from text input
+                searchBy = searchInput.value
+            }
+            //First Letter is selected
+            else if(dropDown.value === 'first letter'){
+                searchOrFilter = "search"
+                //grab value from secondary drop down
+                searchBy = secondDropDown.value
+            }
+            //ingredients is selected
+            else if(dropDown.value === "ingredient"){
+                searchOrFilter = "filter"
+                //grab value from text input
+                searchBy = searchInput.value
+            }
+            //Area or category are selected
+            else{
+                searchOrFilter = "filter"
+                //grab value form secondary drop down
+                searchBy = secondDropDown.value
+            }
+            //run get request only if initial dropdown and search input or secondary dropdown exist
+            if(dropDown.value[0] && searchBy){
+                const url = `https://www.themealdb.com/api/json/v1/1/${searchOrFilter}.php?${dropDown.value[0]}=${searchBy}`
+                getData(url)
+                .then(data => {
+                    //If results are null - send note to DOM
+                    if(data.meals === null){
+                        resultsList.innerHTML = "Sorry, your search yielded 0 results.  Please try again."
+                    }else{
+                        data.meals.forEach(meal =>{
+                            resultsList.innerHTML += `<li data-id="${meal.idMeal}"><a href="#">${meal.strMeal}</a></li>`
+                        })
+                    }    
+               
+                })
+                .catch(error =>{
+                    console.log(error)
+                })
+
+                searchForm.reset()
+                //hide secondary drop down and search input if they are visible
+                searchInput.style.display = "none"
+                secondDropDown.style.display = "none"
+                showLeftPanel()
+                }
+            else{
+                //if text fields are left blank
+                alert("Please fill in text field")
+            }
+        }      
     })
 
       //Add Functionality to Random Button
@@ -135,24 +170,54 @@ document.addEventListener('DOMContentLoaded', ()=>{
     //Add functionaility to filter form - Submit Event that filters results based on user input keyword
     document.querySelector('#filterForm').addEventListener('submit', (e)=>{
         e.preventDefault()
-        const results = resultsList.querySelectorAll('LI')
-        const keyword = document.querySelector('#keywordInput').value.toLowerCase()
-        const filteredResults = Array.from(results).filter(li=>{
-            return (li.firstChild.textContent.toLowerCase().includes(keyword)) === false
-        })
-        filteredResults.forEach(li =>{
-                li.style.display = "none"
-                // li.remove()
-            }
-        )
-        document.querySelector('#undoFilterBtn').style.display = "inline-block"
-        document.querySelector('#filterBtn').style.display = "none"
-
-        document.querySelector('#undoFilterBtn').addEventListener('click',()=>{
-            filteredResults.forEach(li=>{
-                li.style.display = "block"
+        const keyword = document.querySelector('#keywordInput').value
+        if(keyword){
+            //hide 'filter button'
+            document.querySelector('#filterBtn').style.display = "none"
+            //show unfilter btn
+            document.querySelector('#undoFilterBtn').style.display = "inline-block"
+            let results = resultsList.querySelectorAll('LI')
+            const fitleredList = Array.from(results).filter(li =>{
+                return li.textContent.toLowerCase().includes(keyword.toLowerCase())=== false
             })
-        })
+            fitleredList.map(li =>{
+                li.style.display = "none"
+            })
+
+            leftPanel.addEventListener('click', (e)=>{
+                if(e.target.id === 'undoFilterBtn'){
+                resultsList.remove()
+                    const newResultsList = document.createElement('UL')
+                    results.forEach(li=>{
+                        newResultsList.append(li)
+                    })
+                    leftPanel.append(newResultsList)
+                }
+            }) 
+        }else{
+            alert("Please type in keyword")
+        }
+        
+        // const results = resultsList.querySelectorAll('LI')
+        // const keyword = document.querySelector('#keywordInput').value.toLowerCase()
+        // const filteredResults = Array.from(results).filter(li=>{
+        //     return (li.firstChild.textContent.toLowerCase().includes(keyword)) === false
+        // })
+        // filteredResults.forEach(li =>{
+        //         li.style.display = "none"
+        //         // li.remove()
+        //     }
+        // )
+        // document.querySelector('#undoFilterBtn').style.display = "inline-block"
+        // document.querySelector('#filterBtn').style.display = "none"
+
+        // document.querySelector('#undoFilterBtn').addEventListener('click',()=>{
+        //     const ul = document.getElementById('resultsList')
+        //     Array.from(ul.getElementsByTagName('LI')).forEach(li=>{
+        //         li.style.display = "block"
+        //     })
+            
+        // })
     })   
 
   
