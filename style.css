@@ -8,6 +8,7 @@ select{
     text-align: center;
 }
 
+
 /* Header------- */
 #header{
     text-align: center;
@@ -58,10 +59,32 @@ select{
 }
 .sidePanel h4{
     margin-top: 10px;
+    clear: both;    
 }
 #leftPanel{
     display: none;
 }
+#leftPanel li{
+    margin: 10px auto;
+}
+#undoFilterBtn{
+    display: none;
+}
+.hide{
+    display:none;
+}
+#filterForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#keywordInput{
+    width: fit-content;
+}
+#filterBtn{
+    width: fit-content;
+}
+
 
 
 

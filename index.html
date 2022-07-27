@@ -35,20 +35,23 @@
         <div id="mainContainer" class="row">
             
             <div id="leftPanel" class="col-3 sidePanel">
+                
                 <h4>Search Results</h4>
                 <form id="filterForm" action="submit">
-                    <input id="keywordInput"type="text" placeholder="Keyword">
-                    <button type="submit">Filter</button>
-                    <button id="undoFilter">Undo Filter</button>
+                    <input id="keywordInput"type="text" placeholder="Filter By Keyword">
+                    <button id="filterBtn"type="submit">Filter</button>
                 </form>
+                <button id="undoFilterBtn">Undo Filter</button>
+                <p id="resultsCount"></p>
                 <ul id="resultsList"></ul>
+                
             </div>
             
             <div id="centerPanel" class="col">
                 <div id="showPanel" class="row" data-id="0"></div>
                 <div id="comment" class="row">
                     <h4>Comment Section</h4>
-                    <form action="submit">
+                    <form id="commentForm" action="submit">
                         <input id="userNameInput" type="text" placeholder="User Name">
                         <input id="commentInput" type="text" placeholder="Leave comment here">  
                         <button id="commentBtn" type="submit">Submit</button>                  
@@ -57,7 +60,10 @@
                 </div>
             </div>
             
-            <div id="rightPanel" class="col-3 sidePanel"></div>
+            <div id="rightPanel" class="col-3 sidePanel">
+                <h4>Top Ten Recipes</h4>
+                <ul id="topTenList"></ul>
+            </div>
         </div>
     </body>
 </html>

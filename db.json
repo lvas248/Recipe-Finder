@@ -1,19 +1,389 @@
 {
-  "like": [
+  "likes": [
     {
-      "id": 1,
-      "idMeal": "number",
-      "likesCount": "number",
-      "strMeal": "mealname"
+      "idMeal": "52796",
+      "likesCount": "2",
+      "strMeal": "Chicken Alfredo Primavera",
+      "id": 2
+    },
+    {
+      "idMeal": "53023",
+      "likesCount": "4",
+      "strMeal": "Sledz w Oleju (Polish Herrings)",
+      "id": 3
+    },
+    {
+      "idMeal": "52950",
+      "likesCount": "2",
+      "strMeal": "Szechuan Beef",
+      "id": 4
+    },
+    {
+      "idMeal": "52976",
+      "likesCount": "1",
+      "strMeal": "Cashew Ghoriba Biscuits",
+      "id": 5
+    },
+    {
+      "idMeal": "52854",
+      "likesCount": "4",
+      "strMeal": "Pancakes",
+      "id": 6
+    },
+    {
+      "idMeal": "52930",
+      "likesCount": "3",
+      "strMeal": "Pate Chinois",
+      "id": 7
+    },
+    {
+      "idMeal": "52996",
+      "likesCount": "4",
+      "strMeal": "French Onion Chicken with Roasted Carrots & Mashed Potatoes",
+      "id": 8
+    },
+    {
+      "idMeal": "52972",
+      "likesCount": "1",
+      "strMeal": "Tunisian Lamb Soup",
+      "id": 9
+    },
+    {
+      "idMeal": "53007",
+      "likesCount": "3",
+      "strMeal": "Honey Yogurt Cheesecake",
+      "id": 10
+    },
+    {
+      "idMeal": "53061",
+      "likesCount": "1",
+      "strMeal": "Fresh sardines",
+      "id": 11
+    },
+    {
+      "idMeal": "53021",
+      "likesCount": "1",
+      "strMeal": "Gołąbki (cabbage roll)",
+      "id": 12
+    },
+    {
+      "idMeal": "53045",
+      "likesCount": "1",
+      "strMeal": "Portuguese fish stew (Caldeirada de peixe)",
+      "id": 13
+    },
+    {
+      "idMeal": "52782",
+      "likesCount": "5",
+      "strMeal": "Lamb tomato and sweet spices",
+      "id": 14
+    },
+    {
+      "idMeal": "52935",
+      "likesCount": "1",
+      "strMeal": "Steak Diane",
+      "id": 15
+    },
+    {
+      "idMeal": "52982",
+      "likesCount": "1",
+      "strMeal": "Spaghetti alla Carbonara",
+      "id": 16
+    },
+    {
+      "idMeal": "52869",
+      "likesCount": "6",
+      "strMeal": "Tahini Lentils",
+      "id": 17
+    },
+    {
+      "idMeal": "52897",
+      "likesCount": "1",
+      "strMeal": "Carrot Cake",
+      "id": 18
+    },
+    {
+      "idMeal": "52903",
+      "likesCount": "0",
+      "strMeal": "French Onion Soup",
+      "id": 19
+    },
+    {
+      "idMeal": "52929",
+      "likesCount": "1",
+      "strMeal": "Timbits",
+      "id": 20
+    },
+    {
+      "idMeal": "52938",
+      "likesCount": "15",
+      "strMeal": "Jamaican Beef Patties",
+      "id": 21
+    },
+    {
+      "idMeal": "52830",
+      "likesCount": "1",
+      "strMeal": "Crock Pot Chicken Baked Tacos",
+      "id": 22
+    },
+    {
+      "idMeal": "52851",
+      "likesCount": "0",
+      "strMeal": "Nutty Chicken Curry",
+      "id": 23
+    },
+    {
+      "idMeal": "52939",
+      "likesCount": "1",
+      "strMeal": "Callaloo Jamaican Style",
+      "id": 24
+    },
+    {
+      "idMeal": "52952",
+      "likesCount": "1",
+      "strMeal": "Beef Lo Mein",
+      "id": 25
+    },
+    {
+      "idMeal": "53026",
+      "likesCount": "1",
+      "strMeal": "Tamiya",
+      "id": 26
+    },
+    {
+      "idMeal": "52940",
+      "likesCount": "1",
+      "strMeal": "Brown Stew Chicken",
+      "id": 27
+    },
+    {
+      "idMeal": "52818",
+      "likesCount": "1",
+      "strMeal": "Chicken Fajita Mac and Cheese",
+      "id": 28
+    },
+    {
+      "idMeal": "53046",
+      "likesCount": "1",
+      "strMeal": "Portuguese custard tarts",
+      "id": 29
+    },
+    {
+      "idMeal": "52782",
+      "userName": "L.Vasquez",
+      "comment": "This is delicious",
+      "date": "Mon Jul 25 2022",
+      "id": 30
+    },
+    {
+      "idMeal": "52782",
+      "userName": "L.Vasquez",
+      "comment": "This is delicious",
+      "date": "Mon Jul 25 2022",
+      "id": 31
+    },
+    {
+      "idMeal": "52782",
+      "userName": "L.Vasquez",
+      "comment": "This is delicious",
+      "date": "Mon Jul 25 2022",
+      "id": 32
+    },
+    {
+      "idMeal": "52782",
+      "userName": "L.Vasquez",
+      "comment": "This is delicious",
+      "date": "Mon Jul 25 2022",
+      "id": 33
+    },
+    {
+      "idMeal": "53048",
+      "likesCount": "1",
+      "strMeal": "Mee goreng mamak",
+      "id": 34
+    },
+    {
+      "idMeal": "53013",
+      "likesCount": "3",
+      "strMeal": "Big Mac",
+      "id": 35
     }
   ],
   "comments": [
     {
-      "id": 1,
-      "idMeal":"number",
-      "userName": "username",
-      "comment": "comment",
-      "date": "date"
+      "idMeal": "52875",
+      "userName": "Sasha",
+      "comment": "This is delicious",
+      "date": "Sat Jul 16 2022",
+      "id": 1
+    },
+    {
+      "idMeal": "52875",
+      "userName": "CarrotTop",
+      "comment": "Not the best",
+      "date": "Sat Jul 16 2022",
+      "id": 2
+    },
+    {
+      "idMeal": "52855",
+      "userName": "L.Vasquez",
+      "comment": "Replace pecans with walnuts and I'll give this recipe a 10/10",
+      "date": "Sat Jul 16 2022",
+      "id": 3
+    },
+    {
+      "idMeal": "52855",
+      "userName": "CarrotTop",
+      "comment": "needs more carrots",
+      "date": "Sat Jul 16 2022",
+      "id": 4
+    },
+    {
+      "idMeal": "52995",
+      "userName": "Viviana",
+      "comment": "I looooooove BBQ pulled pork",
+      "date": "Sat Jul 16 2022",
+      "id": 5
+    },
+    {
+      "idMeal": "52930",
+      "userName": "Cookie Monster",
+      "comment": "Needs more cookies!!!",
+      "date": "Sun Jul 17 2022",
+      "id": 6
+    },
+    {
+      "idMeal": "52855",
+      "userName": "DoraTheExplorer",
+      "comment": "Mmmmm, delicioso",
+      "date": "Sun Jul 17 2022",
+      "id": 7
+    },
+    {
+      "idMeal": "52830",
+      "userName": "L.Vasquez",
+      "comment": "Easy recipe to follow",
+      "date": "Tue Jul 19 2022",
+      "id": 8
+    },
+    {
+      "idMeal": "52851",
+      "userName": "L.Vasquez",
+      "comment": "Easy, quick, and delicious",
+      "date": "Wed Jul 20 2022",
+      "id": 9
+    },
+    {
+      "idMeal": "52938",
+      "userName": "Jeffrey",
+      "comment": "So good!",
+      "date": "Wed Jul 17 2022",
+      "id": 11
+    },
+    {
+      "idMeal": "52938",
+      "userName": "Sasha the dog",
+      "comment": "Bark!",
+      "date": "Wed Jul 18 2022",
+      "id": 12
+    },
+    {
+      "idMeal": "52938",
+      "userName": "Carrot Top",
+      "comment": "Needs more Carrots!",
+      "date": "Wed Jul 20 2022",
+      "id": 14
+    },
+    {
+      "idMeal": "52938",
+      "userName": "Viviana",
+      "comment": "wow, sooooo good!! :)",
+      "date": "Wed Jul 20 2022",
+      "id": 15
+    },
+    {
+      "idMeal": "52952",
+      "userName": "MISS V",
+      "comment": "VERY HELPFUL!",
+      "date": "Thu Jul 21 2022",
+      "id": 16
+    },
+    {
+      "idMeal": "52976",
+      "userName": "Lizzie McG",
+      "comment": "Good Recipe! Will definitely try again. 10/10",
+      "date": "Thu Jul 21 2022",
+      "id": 17
+    },
+    {
+      "idMeal": "52976",
+      "userName": "Brock",
+      "comment": "These biscuits go great with my morning tea",
+      "date": "Thu Jul 22 2022",
+      "id": 18
+    },
+    {
+      "idMeal": "52940",
+      "userName": "L.Vasquez",
+      "comment": "needs more carrots",
+      "date": "Thu Jul 21 2022",
+      "id": 20
+    },
+    {
+      "idMeal": "53026",
+      "userName": "Viviana",
+      "comment": "Just fine",
+      "date": "Thu Jul 21 2022",
+      "id": 21
+    },
+    {
+      "idMeal": "52818",
+      "userName": "L.Vasquez",
+      "comment": "This is deliceious",
+      "date": "Thu Jul 21 2022",
+      "id": 22
+    },
+    {
+      "idMeal": "52938",
+      "userName": "DoraTheExplorer",
+      "comment": "MMMM, delicioso",
+      "date": "Thu Jul 21 2022",
+      "id": 23
+    },
+    {
+      "idMeal": "52782",
+      "userName": "DoraTheExplorer",
+      "comment": "Mmmmm, delicioso",
+      "date": "Thu Jul 21 2022",
+      "id": 25
+    },
+    {
+      "idMeal": "52938",
+      "userName": "L.Vasquez",
+      "comment": "needs more carrots",
+      "date": "Thu Jul 21 2022",
+      "id": 26
+    },
+    {
+      "idMeal": "52938",
+      "userName": "Viviana",
+      "comment": "Not the best",
+      "date": "Thu Jul 21 2022",
+      "id": 28
+    },
+    {
+      "idMeal": "53046",
+      "userName": "L.Vasquez",
+      "comment": "So yummy!",
+      "date": "Mon Jul 25 2022",
+      "id": 30
+    },
+    {
+      "idMeal": "53013",
+      "userName": "Dr. Suess",
+      "comment": "Taste like the real thing!!",
+      "date": "Wed Jul 27 2022",
+      "id": 31
     }
   ]
 }
