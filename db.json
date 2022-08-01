@@ -2,13 +2,13 @@
   "likes": [
     {
       "idMeal": "52796",
-      "likesCount": "2",
+      "likesCount": "3",
       "strMeal": "Chicken Alfredo Primavera",
       "id": 2
     },
     {
       "idMeal": "53023",
-      "likesCount": "4",
+      "likesCount": "5",
       "strMeal": "Sledz w Oleju (Polish Herrings)",
       "id": 3
     },
@@ -26,7 +26,7 @@
     },
     {
       "idMeal": "52854",
-      "likesCount": "4",
+      "likesCount": "5",
       "strMeal": "Pancakes",
       "id": 6
     },
@@ -50,7 +50,7 @@
     },
     {
       "idMeal": "53007",
-      "likesCount": "3",
+      "likesCount": "4",
       "strMeal": "Honey Yogurt Cheesecake",
       "id": 10
     },
@@ -74,7 +74,7 @@
     },
     {
       "idMeal": "52782",
-      "likesCount": "5",
+      "likesCount": "6",
       "strMeal": "Lamb tomato and sweet spices",
       "id": 14
     },
@@ -92,7 +92,7 @@
     },
     {
       "idMeal": "52869",
-      "likesCount": "6",
+      "likesCount": "7",
       "strMeal": "Tahini Lentils",
       "id": 17
     },
@@ -116,7 +116,7 @@
     },
     {
       "idMeal": "52938",
-      "likesCount": "15",
+      "likesCount": "19",
       "strMeal": "Jamaican Beef Patties",
       "id": 21
     },
@@ -204,9 +204,21 @@
     },
     {
       "idMeal": "53013",
-      "likesCount": "3",
+      "likesCount": "4",
       "strMeal": "Big Mac",
       "id": 35
+    },
+    {
+      "idMeal": "53053",
+      "likesCount": "0",
+      "strMeal": "Beef Rendang",
+      "id": 36
+    },
+    {
+      "idMeal": "52937",
+      "likesCount": "4",
+      "strMeal": "Jerk chicken with rice & peas",
+      "id": 37
     }
   ],
   "comments": [
@@ -384,6 +396,27 @@
       "comment": "Taste like the real thing!!",
       "date": "Wed Jul 27 2022",
       "id": 31
+    },
+    {
+      "idMeal": "52938",
+      "userName": "kevin",
+      "comment": "really tasty :D",
+      "date": "Mon Aug 01 2022",
+      "id": 32
+    },
+    {
+      "idMeal": "52869",
+      "userName": "Jimmy C.",
+      "comment": "I'll eat anything if it has lentils in it",
+      "date": "Mon Aug 01 2022",
+      "id": 33
+    },
+    {
+      "idMeal": "52937",
+      "userName": "Bob M.",
+      "comment": "Reminds me of back home <3",
+      "date": "Mon Aug 01 2022",
+      "id": 34
     }
   ]
 }

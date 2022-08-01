@@ -103,6 +103,7 @@ select{
 }
 #showPanel img{
     width: 60%;
+    max-width: 500px;
     margin: auto;
 }
 #showPanel ul{

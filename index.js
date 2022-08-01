@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 searchBy = secondDropDown.value
             }
             //run get request only if initial dropdown and search input or secondary dropdown exist
-            if(dropDown.value[0] && searchBy){
+            if(dropDown.value && searchBy){
                 const url = `https://www.themealdb.com/api/json/v1/1/${searchOrFilter}.php?${dropDown.value[0]}=${searchBy}`
                 getData(url)
                 .then(data => {
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 })
                 
                 searchForm.reset()
-                //hide secondary drop down and search input if they are visible
+                //hide secondary drop down and search input if they are visible , resets header
                 searchInput.style.display = "none"
                 secondDropDown.style.display = "none"
                 showLeftPanel()
@@ -145,14 +145,13 @@ document.addEventListener('DOMContentLoaded', ()=>{
         getData('https://www.themealdb.com/api/json/v1/1/random.php')
         .then(data => {
             //display data on showPanel
-            loadToShowPanel(data.meals[0])
+            loadToShowPanel(data.meals[0]) //takes meal obj as parameter
         })
     })
 
         //Add functionality to 'Back to results' button
     document.querySelector('#backButton').addEventListener('click', ()=>{
         showLeftPanel()
-        
     })
 
 
@@ -180,7 +179,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
             document.querySelector('#filterBtn').style.display = "none"
             //show unfilter btn
             document.querySelector('#undoFilterBtn').style.display = "inline-block"
-            let results = resultsList.querySelectorAll('LI')
+            const results = resultsList.querySelectorAll('LI')
             //return any LI that doesn't contain the keyword
             const fitleredList = Array.from(results).filter(li =>{
                 return li.textContent.toLowerCase().includes(keyword.toLowerCase())=== false
@@ -190,8 +189,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
             })
 
             //Update recipe result count when results are filtered
-            let count = document.querySelector('#resultsCount') //grab p with results counts
-            let splitCount = count.innerText.split(' ')
+            const count = document.querySelector('#resultsCount') //grab p with results counts
+            const splitCount = count.innerText.split(' ')
             splitCount[1] = results.length - fitleredList.length
             count.innerText = splitCount.join(' ')
             
@@ -200,9 +199,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 if(e.target.id === 'undoFilterBtn'){
                     fitleredList.map(li=>{
                         li.style.display = ""
-                        document.querySelector('#undoFilterBtn').style.display = "none"
-                        document.querySelector('#filterBtn').style.display = "inline-block"
                     })
+                document.querySelector('#undoFilterBtn').style.display = "none"
+                document.querySelector('#filterBtn').style.display = "inline-block"
+
                 //update recipe result count when filter is undone
                 count.innerText = `Results: ${results.length} recipes`
                 }
@@ -214,7 +214,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
         filterForm.reset()
     })   
 
-//Go through like and unlike functionality again and optimize
 
     //Center Panel Functionality
       //Like/Unlike button
@@ -285,14 +284,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 })
             }
             else{
-                //create new li - append to right panel - fire sortList() - load top ten to right panel
+                //create new li - append to UL in right panel - fire sortList() - load top ten to right panel
                 const mealId = showPanel.dataset.id 
-                let likesCount = showPanel.querySelector('#likesNote').innerText.split(' ')[0]
-                likesCount = parseInt(likesCount)
                 const strMeal = showPanel.querySelector('#mealName').innerText
                     //create new li with current meal details and add to Right panel - now right panel has 11 meals
                 topTenList.innerHTML +=
-                `<li data-id="${mealId}"><p id="sideLikes">${likesCount} &hearts;</p><a href="#">${strMeal}</a></li>`
+                `<li data-id="${mealId}"><p id="sideLikes">${updatedLikeCount} &hearts;</p><a href="#">${strMeal}</a></li>`
                     //fire sortList() - resorts and returns top 10 meals
                 const sortedList = sortList()
                 topTenList.innerHTML = ""
@@ -366,8 +363,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
     function loadTopTen(){ 
         getData('http://localhost:3000/likes')
         .then(data =>{
-            const topTen = sortTopTen(data)
-            function sortTopTen(array){
+            const topTen = sortLikes(data) //sorts recipes in db by likes, returns top 10
+            function sortLikes(array){
                 array.sort((a,b)=>{
                     return b.likesCount - a.likesCount
                 })
@@ -397,6 +394,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         }
     })
 
+   
 
 
 //Reusable functions
@@ -441,19 +439,16 @@ document.addEventListener('DOMContentLoaded', ()=>{
         function formatIngr(mealObj){
         ingredientList.innerHTML = ""
         //Pull all keys from meal Array
-        let objKeys = Object.keys(mealObj)
+        const objKeys = Object.keys(mealObj)
         for(let i=1; i<= 20; i++){
-            if(objKeys.find(key => key === `strIngredient${i}`)){
-                //create and add an LI for any key that doesnt have a null value
                 if(mealObj[`strIngredient${i}`]){
                     ingredientList.innerHTML += `<li>${mealObj[`strIngredient${i}`]} : ${mealObj[`strMeasure${i}`]}</li>`
                 }    
             }
-        }
         } 
         formatRecipe(mealObj)
         function formatRecipe(mealObj){
-            let recipe = mealObj.strInstructions.split('. ')
+            const recipe = mealObj.strInstructions.split('. ')
             recipe.forEach(line =>{
                 recipeDiv.innerHTML += `<p>${line}</p>`
             })
@@ -469,7 +464,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
           const likeObj = data.find(obj => obj.idMeal === mealObj.idMeal)
           if(likeObj){
                 //update likes on show panel
-              likes = likeObj.likesCount
+              const likes = likeObj.likesCount
               const text = document.querySelector('#likesNote').textContent.split(' ')
               text[0] = likes
               document.querySelector('#likesNote').textContent = text.join(' ')
